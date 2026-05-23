@@ -42,20 +42,23 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Navbar Superior Corporativo */}
-      <nav className="bg-blue-900 text-white p-4 shadow-md flex justify-between items-center">
+      {/* Navbar Superior Corporativo Responsivo */}
+      <nav className="bg-blue-900 text-white p-4 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-emerald-400" />
-          <span className="font-bold text-lg tracking-wide">OpSys Technologies | Gestor EPP</span>
+          <span className="font-bold text-base md:text-lg tracking-wide text-center md:text-left">
+            OpSys Technologies | Gestor EPP
+          </span>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setVista('registro')} className={`px-4 py-2 rounded flex items-center gap-2 font-medium text-sm transition ${vista === 'registro' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <QrCode className="h-4 w-4" /> 1. Registro & QR
+        <div className="flex flex-wrap justify-center gap-2 w-full md:w-auto">
+          <button onClick={() => setVista('registro')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'registro' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
+            <QrCode className="h-4 w-4" /> <span className="whitespace-nowrap">1. Registro & QR</span>
           </button>
-          <button onClick={() => setVista('movil')} className={`px-4 py-2 rounded flex items-center gap-2 font-medium text-sm transition ${vista === 'movil' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <span>📷</span> 2. App Almacén
+          <button onClick={() => setVista('movil')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'movil' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
+            <span>📷</span> <span className="whitespace-nowrap">2. App Almacén</span>
           </button>
-          <button onClick={() => setVista('dashboard')} className={`px-4 py-2 rounded flex items-center gap-2 font-medium text-sm transition ${vista === 'dashboard' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <LayoutDashboard className="h-4 w-4" /> 3. Dashboard NOM-017
+          <button onClick={() => setVista('dashboard')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'dashboard' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
+            <LayoutDashboard className="h-4 w-4" /> <span className="whitespace-nowrap">3. Dashboard</span>
           </button>
         </div>
       </nav>

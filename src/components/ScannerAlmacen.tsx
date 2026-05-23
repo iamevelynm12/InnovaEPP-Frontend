@@ -65,7 +65,7 @@ export default function ScannerAlmacen({ onAsignacionExitosa }: ScannerProps) {
     try {
       // Registrar cada uno de los EPP seleccionados secuencialmente
       for (const producto of seleccionados) {
-        await fetch('http://localhost:4000/api/asignar-epp', {
+        await fetch('https://innovaepp-backend.onrender.com/api/asignar-epp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idNomina: trabajador.idNomina, producto })
