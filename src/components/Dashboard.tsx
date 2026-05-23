@@ -67,7 +67,7 @@ export default function DashboardNom017({ trabajadores, onActualizar }: Dashboar
 
   try {
     // Usamos directamente idNomina limpio para evitar confusiones de variables
-    const res = await fetch(`https://innovaepp-backend.onrender.com/api/baja-trabajadores/${idNomina.trim()}`, {
+    const res = await fetch(`https://innovaepp-backend.onrender.com/api/baja-trabajador/${idNomina.trim()}`, {
       method: 'DELETE'
     });
 
