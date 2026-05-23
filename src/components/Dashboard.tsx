@@ -37,7 +37,7 @@ export default function DashboardNom017({ trabajadores, onActualizar }: Dashboar
   const evaluarAlerta = (fechaVencimiento: string) => {
     const diasRestantes = Math.ceil((new Date(fechaVencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
     if (diasRestantes <= 0) return { texto: "⚠️ VENCIDO", clase: "bg-red-500 text-white" };
-    if (diasRestantes <= 15) return { texto: "⏳ RENOVACIÓN INMINENTE", clase: "bg-amber-500 text-black" };
+    if (diasRestantes <= 15) return { texto: "⏳ RENOVACIÓN PRÓXIMA", clase: "bg-amber-500 text-black" };
     return { texto: "✅ Vigente", clase: "bg-green-500 text-white" };
   };
 
@@ -143,7 +143,7 @@ export default function DashboardNom017({ trabajadores, onActualizar }: Dashboar
               <th className="p-3">Departamento</th>
               <th className="p-3">EPP Industrial Asignado</th>
               <th className="p-3">Fecha de Entrega</th>
-              <th className="p-3">Vencimiento NOM</th>
+              <th className="p-3">Vencimiento EPP</th>
               <th className="p-3 text-center">Indicador Estado</th>
               <th className="p-3 text-center">Acciones</th>
             </tr>
