@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { UserPlus, Printer } from 'lucide-react';
+import { UserPlus, Printer, Download } from 'lucide-react';
 
 interface RegistroProps {
   onRegistroExitoso: () => void;
@@ -67,6 +67,42 @@ export default function RegistroPersonal({ onRegistroExitoso }: RegistroProps) {
     ventanaImpresion.document.close();
   };
 
+  const handleDescargarQR = () => {
+    const svgElement = document.querySelector('#area-qr-credencial svg') as SVGElement;
+    if (!svgElement) return;
+
+    // Convertimos el SVG a string
+    const svgString = new XMLSerializer().serializeToString(svgElement);
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const URLDeImagen = URL.createObjectURL(svgBlob);
+
+    // Creamos un elemento imagen en memoria
+    const imagen = new Image();
+    imagen.onload = () => {
+      // Creamos un canvas para renderizar la imagen de forma nativa a PNG
+      const canvas = document.createElement('canvas');
+      canvas.width = 300; // Alta resolución para el QR escaneable
+      canvas.height = 300;
+      const contexto = canvas.getContext('2d');
+      
+      if (contexto) {
+        // Fondo blanco para que los lectores lo escaneen perfectamente
+        contexto.fillStyle = '#ffffff';
+        contexto.fillRect(0, 0, canvas.width, canvas.height);
+        // Dibujamos el QR sobre el fondo blanco
+        contexto.drawImage(imagen, 20, 20, 260, 260);
+
+        // Disparamos la descarga automática
+        const enlaceDescarga = document.createElement('a');
+        enlaceDescarga.download = `QR_${idNomina || 'empleado'}.png`;
+        enlaceDescarga.href = canvas.toDataURL('image/png');
+        enlaceDescarga.click();
+      }
+      URL.revokeObjectURL(URLDeImagen);
+    };
+    imagen.src = URLDeImagen;
+  };
+
   return (
     <div className="grid md:grid-cols-2 gap-8 bg-white p-4">
       <div className="border border-[#e2e8f0] p-6 rounded-md">
@@ -106,9 +142,16 @@ export default function RegistroPersonal({ onRegistroExitoso }: RegistroProps) {
             </div>
             <p className="font-bold text-[#0f172a] mt-3 text-sm uppercase tracking-wide">{nombre}</p>
             <p className="text-[10px] text-[#64748b] font-medium mb-4">{puesto}</p>
-            <button onClick={handleImprimirCredencial} className="w-full bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] text-xs font-bold py-2 rounded flex items-center justify-center gap-2 transition border border-[#cbd5e1] uppercase tracking-wider">
-              <Printer className="h-3.5 w-3.5 text-[#475569]" /> Imprimir Ficha Física
-            </button>
+            
+            {/* Panel de Acciones Corporativas de la Credencial */}
+            <div className="grid grid-cols-2 gap-2 w-full">
+              <button onClick={handleImprimirCredencial} className="bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] text-[10px] font-bold py-2 px-1 rounded flex items-center justify-center gap-1 transition border border-[#cbd5e1] uppercase tracking-wider">
+                <Printer className="h-3 w-3 text-[#475569]" /> Imprimir
+              </button>
+              <button onClick={handleDescargarQR} className="bg-[#0f172a] hover:bg-[#1e293b] text-white text-[10px] font-bold py-2 px-1 rounded flex items-center justify-center gap-1 transition border border-[#0f172a] uppercase tracking-wider">
+                <Download className="h-3 w-3 text-white" /> Descargar PNG
+              </button>
+            </div>
           </div>
         ) : (
           <p className="text-[#94a3b8] text-xs uppercase tracking-wide max-w-xs leading-relaxed">Complete el formulario técnico para compilar la firma e identificador QR de seguridad.</p>
