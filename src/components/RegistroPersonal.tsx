@@ -24,12 +24,12 @@ export default function RegistroPersonal({ onRegistroExitoso }: RegistroProps) {
       if (res.ok) {
         setQrGenerado(idNomina);
         onRegistroExitoso();
-        alert("Operario guardado en MongoDB con éxito.");
+        alert("Notificación del sistema: Registro de personal dado de alta en el servidor central.");
       } else {
-        alert("Error al persistir en la base de datos. Verifica si el ID ya existe.");
+        alert("Falla de persistencia: El identificador numérico de nómina ya existe en la base de datos.");
       }
     } catch (error) {
-      alert("No se pudo conectar con el servidor backend en el puerto 4000.");
+      alert("Error crítico de comunicación: Sin enlace con el nodo del servidor.");
     }
   };
 
@@ -42,23 +42,23 @@ export default function RegistroPersonal({ onRegistroExitoso }: RegistroProps) {
     ventanaImpresion.document.write(`
       <html>
         <head>
-          <title>Imprimir Credencial - ${nombre}</title>
+          <title>Credencial Corporativa - ${nombre}</title>
           <style>
-            body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-            .credencial { border: 2px solid #1e3a8a; padding: 20px; border-radius: 10px; text-align: center; width: 280px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-            .header { background: #1e3a8a; color: white; padding: 10px; font-weight: bold; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
-            .nombre { font-size: 18px; font-weight: bold; color: #111827; margin: 10px 0 5px 0; }
-            .detalle { font-size: 12px; color: #4b5563; margin-bottom: 15px; }
-            .footer { font-size: 10px; color: #9ca3af; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 8px; }
+            body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f8fafc; }
+            .credencial { border: 1px solid #cbd5e1; padding: 24px; border-radius: 6px; text-align: center; width: 260px; background: white; }
+            .header { background: #0f172a; color: white; padding: 10px; font-weight: 700; border-radius: 2px; margin-bottom: 16px; font-size: 11px; text-transform: uppercase; tracking-wider: 0.05em; }
+            .nombre { font-size: 15px; font-weight: 700; color: #0f172a; margin: 16px 0 4px 0; uppercase; tracking-wide: -0.01em; }
+            .detalle { font-size: 11px; color: #475569; margin-bottom: 16px; line-height: 1.4; }
+            .footer { font-size: 9px; color: #94a3b8; margin-top: 16px; border-top: 1px dashed #e2e8f0; padding-top: 10px; text-transform: uppercase; }
           </style>
         </head>
         <body>
           <div class="credencial">
-            <div class="header">OpSys Technologies<br>CREDENCIAL TÉCNICA EPP</div>
-            <div style="display: flex; justify-content: center;">${qrSvgElement}</div>
+            <div class="header">OpSys Industrial Systems<br>CREDENCIAL TÉCNICA EPP</div>
+            <div style="display: flex; justify-content: center; padding: 4px; background: white;">${qrSvgElement}</div>
             <div class="nombre">${nombre}</div>
-            <div class="detalle">ID: ${idNomina}<br>${puesto} - ${departamento}</div>
-            <div class="footer">NOM-017-STPS-2008<br>Escanee en Almacén para Surtido</div>
+            <div class="detalle">ID CONTROL: ${idNomina}<br>PUESTO: ${puesto} - ${departamento}</div>
+            <div class="footer">NOM-017-STPS-2008<br>Validación Requerida en Almacén</div>
           </div>
           <script>window.print(); window.close();</script>
         </body>
@@ -68,38 +68,50 @@ export default function RegistroPersonal({ onRegistroExitoso }: RegistroProps) {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-      <div>
-        <h2 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
-          <UserPlus className="h-5 w-5 text-blue-600" /> Vinculación de Personal al Sistema
+    <div className="grid md:grid-cols-2 gap-8 bg-white p-4">
+      <div className="border border-[#e2e8f0] p-6 rounded-md">
+        <h2 className="text-sm font-bold text-[#0f172a] mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-[#f1f5f9] pb-3">
+          <UserPlus className="h-4 w-4 text-[#475569]" /> Vinculación de Personal al Sistema
         </h2>
         <form onSubmit={handleRegistrar} className="space-y-4">
-          <input type="text" placeholder="ID de Nómina (Ej: EMP-2245)" value={idNomina} onChange={e => setIdNomina(e.target.value)} required className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
-          <input type="text" placeholder="Nombre Completo del Operario" value={nombre} onChange={e => setNombre(e.target.value)} required className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
-          <input type="text" placeholder="Departamento (Ej: Fundición)" value={departamento} onChange={e => setDepartamento(e.target.value)} required className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
-          <input type="text" placeholder="Puesto de Trabajo" value={puesto} onChange={e => setPuesto(e.target.value)} required className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" />
-          <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-lg transition shadow text-sm">
-            Vincular y Cifrar Código QR
+          <div>
+            <label className="block text-[9px] font-bold text-[#64748b] uppercase tracking-widest mb-1">Código Identificador de Nómina</label>
+            <input type="text" placeholder="Ej: EMP-2245" value={idNomina} onChange={e => setIdNomina(e.target.value)} required className="w-full p-2.5 border border-[#cbd5e1] rounded text-xs focus:outline-none focus:border-[#0f172a]" />
+          </div>
+          <div>
+            <label className="block text-[9px] font-bold text-[#64748b] uppercase tracking-widest mb-1">Nombre Completo del Operario</label>
+            <input type="text" placeholder="Ej: Juan Pérez Sánchez" value={nombre} onChange={e => setNombre(e.target.value)} required className="w-full p-2.5 border border-[#cbd5e1] rounded text-xs focus:outline-none focus:border-[#0f172a]" />
+          </div>
+          <div>
+            <label className="block text-[9px] font-bold text-[#64748b] uppercase tracking-widest mb-1">Departamento de Adscripción</label>
+            <input type="text" placeholder="Ej: Planta de Fundición" value={departamento} onChange={e => setDepartamento(e.target.value)} required className="w-full p-2.5 border border-[#cbd5e1] rounded text-xs focus:outline-none focus:border-[#0f172a]" />
+          </div>
+          <div>
+            <label className="block text-[9px] font-bold text-[#64748b] uppercase tracking-widest mb-1">Puesto de Trabajo Estructural</label>
+            <input type="text" placeholder="Ej: Técnico de Operaciones A" value={puesto} onChange={e => setPuesto(e.target.value)} required className="w-full p-2.5 border border-[#cbd5e1] rounded text-xs focus:outline-none focus:border-[#0f172a]" />
+          </div>
+          <button type="submit" className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold p-3 rounded text-xs transition uppercase tracking-wider shadow-sm mt-2">
+            Vincular y Cifrar Identidad QR
           </button>
         </form>
       </div>
 
-      <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-xl p-6 bg-slate-50 text-center">
-        <h3 className="font-bold text-slate-700 mb-2 text-sm">Vista Previa de Credencial</h3>
+      <div className="flex flex-col items-center justify-center border border-dashed border-[#cbd5e1] rounded p-6 bg-[#f8fafc] text-center min-h-350px">
+        <h3 className="font-bold text-[#64748b] mb-4 text-[10px] uppercase tracking-widest">Previsualización de Documento de Identidad</h3>
         {qrGenerado ? (
-          <div className="bg-white p-5 rounded-xl shadow-md border border-slate-200 flex flex-col items-center w-64">
-            <div className="bg-blue-900 text-white text-xs font-bold py-1 w-full text-center rounded mb-3">OpSys - CREDENCIAL</div>
-            <div id="area-qr-credencial">
-              <QRCodeSVG value={qrGenerado} size={150} includeMargin={true} />
+          <div className="bg-white p-5 rounded border border-[#e2e8f0] flex flex-col items-center w-64 shadow-sm animate-fadeIn">
+            <div className="bg-[#0f172a] text-white text-[9px] font-bold py-1 w-full text-center rounded-sm mb-3 uppercase tracking-widest">OpSys Systems • Credencial</div>
+            <div id="area-qr-credencial" className="bg-white p-2 border border-[#e2e8f0]">
+              <QRCodeSVG value={qrGenerado} size={140} includeMargin={false} />
             </div>
-            <p className="font-bold text-slate-800 mt-3 text-base">{nombre}</p>
-            <p className="text-xs text-slate-500 mb-4">{puesto}</p>
-            <button onClick={handleImprimirCredencial} className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition shadow">
-              <Printer className="h-3.5 w-3.5" /> Imprimir Credencial
+            <p className="font-bold text-[#0f172a] mt-3 text-sm uppercase tracking-wide">{nombre}</p>
+            <p className="text-[10px] text-[#64748b] font-medium mb-4">{puesto}</p>
+            <button onClick={handleImprimirCredencial} className="w-full bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] text-xs font-bold py-2 rounded flex items-center justify-center gap-2 transition border border-[#cbd5e1] uppercase tracking-wider">
+              <Printer className="h-3.5 w-3.5 text-[#475569]" /> Imprimir Ficha Física
             </button>
           </div>
         ) : (
-          <p className="text-slate-400 text-sm max-w-xs">Ingrese la información del formulario para generar el QR único de identidad.</p>
+          <p className="text-[#94a3b8] text-xs uppercase tracking-wide max-w-xs leading-relaxed">Complete el formulario técnico para compilar la firma e identificador QR de seguridad.</p>
         )}
       </div>
     </div>
