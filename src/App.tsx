@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, QrCode, LayoutDashboard } from 'lucide-react';
+import { Shield, QrCode, LayoutDashboard, Camera } from 'lucide-react';
 import RegistroPersonal from './components/RegistroPersonal';
 import ScannerAlmacen from './components/ScannerAlmacen';
 import DashboardNom017 from './components/Dashboard';
@@ -26,7 +26,6 @@ function App() {
 
   const cargarTrabajadores = async () => {
     try {
-      // Cambiamos localhost por tu URL real de Render
       const res = await fetch('https://innovaepp-backend.onrender.com/api/trabajadores');
       const data = await res.json();
       setTrabajadores(data);
@@ -40,42 +39,65 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
-      {/* Navbar Superior Corporativo */}
-      {/* Navbar Superior Corporativo Responsivo */}
-      <nav className="bg-blue-900 text-white p-4 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+    <div className="min-h-screen bg-[#f8fafc] text-[#334155] font-sans antialiased">
+      {/* Navbar Superior Corporativo Industrial */}
+      <nav className="bg-[#0f172a] text-white p-4 border-b border-[#1e293b] flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
-          <Shield className="h-6 w-6 text-emerald-400" />
-          <span className="font-bold text-base md:text-lg tracking-wide text-center md:text-left">
-            OpSys Technologies | Gestor EPP
+          <Shield className="h-4 w-4 text-[#94a3b8]" />
+          <span className="font-bold text-xs md:text-xs tracking-widest text-center md:text-left uppercase text-white">
+            OpSys Industrial Systems <span className="text-[#94a3b8] font-normal">| Gestor EPP</span>
           </span>
         </div>
-        <div className="flex flex-wrap justify-center gap-2 w-full md:w-auto">
-          <button onClick={() => setVista('registro')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'registro' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <QrCode className="h-4 w-4" /> <span className="whitespace-nowrap">1. Registro & QR</span>
+        
+        {/* Menú de Navegación Estilo Pestañas Corporativas */}
+        <div className="flex flex-wrap justify-center gap-1.5 w-full md:w-auto">
+          <button 
+            onClick={() => setVista('registro')} 
+            className={`flex-1 md:flex-none px-4 py-2 rounded-sm flex items-center justify-center gap-2 font-bold text-[11px] tracking-wider uppercase transition duration-150 ${
+              vista === 'registro' ? 'bg-[#1e293b] text-white border border-[#334155]' : 'text-[#94a3b8] hover:text-white hover:bg-[#1e293b]/50'
+            }`}
+          >
+            <QrCode className="h-3.5 w-3.5" /> 
+            <span className="whitespace-nowrap">01. Registro & QR</span>
           </button>
-          <button onClick={() => setVista('movil')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'movil' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <span>📷</span> <span className="whitespace-nowrap">2. App Almacén</span>
+          
+          <button 
+            onClick={() => setVista('movil')} 
+            className={`flex-1 md:flex-none px-4 py-2 rounded-sm flex items-center justify-center gap-2 font-bold text-[11px] tracking-wider uppercase transition duration-150 ${
+              vista === 'movil' ? 'bg-[#1e293b] text-white border border-[#334155]' : 'text-[#94a3b8] hover:text-white hover:bg-[#1e293b]/50'
+            }`}
+          >
+            <Camera className="h-3.5 w-3.5" /> 
+            <span className="whitespace-nowrap">02. Terminal Almacén</span>
           </button>
-          <button onClick={() => setVista('dashboard')} className={`flex-1 md:flex-none px-3 py-2 rounded flex items-center justify-center gap-2 font-medium text-xs md:text-sm transition ${vista === 'dashboard' ? 'bg-blue-700' : 'hover:bg-blue-800'}`}>
-            <LayoutDashboard className="h-4 w-4" /> <span className="whitespace-nowrap">3. Dashboard</span>
+          
+          <button 
+            onClick={() => setVista('dashboard')} 
+            className={`flex-1 md:flex-none px-4 py-2 rounded-sm flex items-center justify-center gap-2 font-bold text-[11px] tracking-wider uppercase transition duration-150 ${
+              vista === 'dashboard' ? 'bg-[#1e293b] text-white border border-[#334155]' : 'text-[#94a3b8] hover:text-white hover:bg-[#1e293b]/50'
+            }`}
+          >
+            <LayoutDashboard className="h-3.5 w-3.5" /> 
+            <span className="whitespace-nowrap">03. Panel de Control</span>
           </button>
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Renderizado de Componentes Segregados */}
-        {vista === 'registro' && (
-          <RegistroPersonal onRegistroExitoso={cargarTrabajadores} />
-        )}
+      {/* Contenedor Principal de Modulos Segregados */}
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
+        <div className="bg-white border border-[#e2e8f0] rounded-sm shadow-xs p-2 md:p-4">
+          {vista === 'registro' && (
+            <RegistroPersonal onRegistroExitoso={cargarTrabajadores} />
+          )}
 
-        {vista === 'movil' && (
-          <ScannerAlmacen onAsignacionExitosa={cargarTrabajadores} />
-        )}
+          {vista === 'movil' && (
+            <ScannerAlmacen onAsignacionExitosa={cargarTrabajadores} />
+          )}
 
-        {vista === 'dashboard' && (
-          <DashboardNom017 trabajadores={trabajadores} onActualizar={cargarTrabajadores} />
-        )}
+          {vista === 'dashboard' && (
+            <DashboardNom017 trabajadores={trabajadores} onActualizar={cargarTrabajadores} />
+          )}
+        </div>
       </div>
     </div>
   );

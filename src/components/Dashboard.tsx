@@ -35,7 +35,7 @@ export default function DashboardNom017({ trabajadores, onActualizar }: Dashboar
   const evaluarAlerta = (fechaVencimiento: string) => {
     const diasRestantes = Math.ceil((new Date(fechaVencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
     if (diasRestantes <= 0) return { texto: "VENCIDO / RIESGO DE AUDITORÍA", clase: "bg-red-50 text-red-700 border border-red-200" };
-    if (diasRestantes <= 15) return { texto: "RENOVACIÓN REQUERIDA", clase: "bg-amber-50 text-amber-700 border border-amber-200" };
+    if (diasRestantes <= 15) return { texto: "RENOVACIÓN PRÓXIMA", clase: "bg-amber-50 text-amber-700 border border-amber-200" };
     return { texto: "CONFORMIDAD VIGENTE", clase: "bg-emerald-50 text-emerald-700 border border-emerald-200" };
   };
 
